@@ -1,10 +1,18 @@
+import { parseRoutes, parseParams } from './utils.js';
+
 export default (routes) => {
+  const parsedRoutes = parseRoutes(routes);
+
   const serve = (path) => {
-    const foundPath = routes.find((route) => path === route.path);
+    const route = parsedRoutes.find((r) => path.match(r.replacedPath));
 
-    if (!foundPath) throw new Error('Unknown path');
+    if (!route) throw new Error(`Unknown path - ${path}`);
 
-    return foundPath.handler;
+    return {
+      path: route.path,
+      handler: route.handler,
+      params: parseParams(route.path, path),
+    };
   };
 
   return { serve };
