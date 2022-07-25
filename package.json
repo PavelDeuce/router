@@ -1,0 +1,44 @@
+{
+  "name": "@hexlet/code",
+  "version": "1.0.0",
+  "description": "Simple router",
+  "keywords": [
+    "router"
+  ],
+  "main": "src/router.js",
+  "type": "module",
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "scripts": {
+    "test": "npx jest --colors",
+    "test-coverage": "npm test -- --coverage --coverageProvider=v8",
+    "lint": "npx eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PavelDeuce/js-algorithms-trees-project-lvl1.git"
+  },
+  "author": "Pavel Deryugin (PavelDeuce)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PavelDeuce/js-algorithms-trees-project-lvl1/issues"
+  },
+  "homepage": "https://github.com/PavelDeuce/js-algorithms-trees-project-lvl1#readme",
+  "devDependencies": {
+    "@jest/globals": "^28.1.2",
+    "@types/jest": "^28.1.6",
+    "eslint": "^8.19.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jest": "^26.5.3",
+    "eslint-plugin-jsdoc": "^39.3.3",
+    "eslint-plugin-prettier": "^4.2.1",
+    "jest": "^28.1.2",
+    "jest-cli": "^28.1.2",
+    "jest-environment-node": "^28.1.2",
+    "prettier": "^2.7.1",
+    "typescript": "^4.7.4"
+  }
+}
