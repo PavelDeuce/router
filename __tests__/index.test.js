@@ -1,4 +1,4 @@
-import makeRouter from '../src/router.js';
+import makeRouter from '../src/index.js';
 
 describe('router', () => {
   test('static routes', () => {

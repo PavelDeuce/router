@@ -1,8 +1,4 @@
-export const parseRoutes = (routes) =>
-  routes.map((route) => ({
-    ...route,
-    replacedPath: new RegExp(`^${route.path.replace(/:\w+/gi, '\\w+')}$`),
-  }));
+export const parsePath = (path) => new RegExp(`^${path.replace(/:\w+/gi, '\\w+')}$`);
 
 export const parseParams = (routePath, path) => {
   const parts = path.split('/');
