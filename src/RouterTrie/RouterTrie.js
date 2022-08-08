@@ -1,6 +1,6 @@
 import RouterNode from './RouterNode.js';
 import { parsePath } from '../utils.js';
-import defaultMethod from '../constants.js';
+import { defaultMethod } from '../constants.js';
 
 export default class RouterTrie {
   constructor(routes, divider = '/') {
@@ -23,7 +23,6 @@ export default class RouterTrie {
   }
 
   findRoute(path, method) {
-    console.log(path, method);
     const segments = parsePath(path, this.divider);
     const result = this.root.findChild(segments, method);
 

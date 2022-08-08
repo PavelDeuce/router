@@ -1,5 +1,5 @@
 import RouterTrie from './RouterTrie/RouterTrie.js';
-import defaultMethod from './constants.js';
+import { defaultMethod, errorsMapping } from './constants.js';
 
 export default (routes) => {
   const router = new RouterTrie(routes);
@@ -7,7 +7,7 @@ export default (routes) => {
   const serve = ({ path, method = defaultMethod }) => {
     const route = router.findRoute(path, method);
 
-    if (!route) throw new Error(`Unknown path - ${path}`);
+    if (!route) throw new Error(errorsMapping.unknownPathError(path));
 
     return route;
   };

@@ -1,3 +1,5 @@
-const defaultMethod = 'GET';
+export const defaultMethod = 'GET';
 
-export default defaultMethod;
+export const errorsMapping = {
+  unknownPathError: (path) => `Unknown path - ${path}`,
+};
