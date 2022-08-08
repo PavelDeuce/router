@@ -1,5 +1,6 @@
-import RouterNode from './RouterNode';
-import { parsePath } from '../utils';
+import RouterNode from './RouterNode.js';
+import { parsePath } from '../utils.js';
+import defaultMethod from '../constants.js';
 
 export default class RouterTrie {
   constructor(routes, divider = '/') {
@@ -7,7 +8,8 @@ export default class RouterTrie {
     this.divider = divider;
 
     routes.forEach((route) => {
-      this.addRoute(route);
+      const { method = defaultMethod } = route;
+      this.addRoute({ ...route, method });
     });
   }
 
@@ -20,9 +22,10 @@ export default class RouterTrie {
     }, this.root);
   }
 
-  findRoute(path) {
+  findRoute(path, method) {
+    console.log(path, method);
     const segments = parsePath(path, this.divider);
-    const result = this.root.findChild(segments);
+    const result = this.root.findChild(segments, method);
 
     return result ? { ...result, path: result.path.join(this.divider) } : null;
   }

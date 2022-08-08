@@ -1,15 +1,12 @@
-import { getDynamicSegment, isDynamicSegment } from '../utils';
+import { getDynamicSegment, isDynamicSegment } from '../utils.js';
 
 export default class RouterNode {
   constructor(path, routeData = null) {
     this.pathSegment = path;
     this.staticChildren = new Map();
     this.dynamicChildren = new Map();
-    this.routeData = routeData;
-  }
-
-  getRouteData() {
-    return this.routeData;
+    this.handlersByMethodMapping =
+      routeData && routeData.method ? { [routeData.method]: routeData.handler } : {};
   }
 
   addChild(pathSegment, routeData) {
@@ -17,11 +14,16 @@ export default class RouterNode {
       ? this.dynamicChildren
       : this.staticChildren;
 
-    if (currentChildren.has(pathSegment)) return currentChildren.get(pathSegment);
+    if (!currentChildren.has(pathSegment)) {
+      const node = new RouterNode(pathSegment, routeData);
+      currentChildren.set(pathSegment, node);
+      return node;
+    }
 
-    const node = new RouterNode(pathSegment, routeData);
-    currentChildren.set(pathSegment, node);
-    return node;
+    const { handler, method } = routeData;
+    if (routeData && !this.handlersByMethodMapping[method])
+      this.handlersByMethodMapping[method] = handler;
+    return currentChildren.get(pathSegment);
   }
 
   findStaticChild(segments, method) {
@@ -33,11 +35,11 @@ export default class RouterNode {
     return { ...data, path: [segment, ...data.path] };
   }
 
-  findDynamicChild(segments) {
+  findDynamicChild(segments, method) {
     const [segment, ...rest] = segments;
     // eslint-disable-next-line no-restricted-syntax
     for (const [dynamicSegment, child] of this.dynamicChildren.entries()) {
-      const data = child.findChild(rest);
+      const data = child.findChild(rest, method);
       if (data !== null) {
         const name = getDynamicSegment(dynamicSegment);
         return {
@@ -51,15 +53,15 @@ export default class RouterNode {
     return null;
   }
 
-  findChild(segments) {
+  findChild(segments, method) {
     if (segments.length === 0) {
-      const { handler } = this.getRouteData();
+      const handler = this.handlersByMethodMapping[method];
       return { path: [], params: {}, handler };
     }
 
-    const data = this.findStaticChild(segments);
+    const data = this.findStaticChild(segments, method);
     if (data) return data;
 
-    return this.findDynamicChild(segments);
+    return this.findDynamicChild(segments, method);
   }
 }
