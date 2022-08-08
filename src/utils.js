@@ -1,12 +1,9 @@
-export const parsePath = (path) => new RegExp(`^${path.replace(/:\w+/gi, '\\w+')}$`);
+export const parsePath = (path, divider) =>
+  path
+    .trim()
+    .split(divider)
+    .filter((s) => s !== '');
 
-export const parseParams = (routePath, path) => {
-  const parts = path.split('/');
-  const colon = ':';
+export const isDynamicSegment = (segment) => segment.startsWith(':');
 
-  return routePath.split('/').reduce((params, part, index) => {
-    if (!part.startsWith(colon)) return params;
-
-    return { ...params, [part.slice(part.indexOf(colon) + 1)]: parts[index] };
-  });
-};
+export const getDynamicSegment = (segment) => segment.slice(1);
