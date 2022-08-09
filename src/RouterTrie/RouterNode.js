@@ -5,19 +5,19 @@ export default class RouterNode {
   constructor(routeData = null) {
     this.staticChildren = new Map();
     this.dynamicChildren = new Map();
-    this.constraint =
-      routeData && routeData.constraint && RouterNode.validateConstraint(routeData.constraint)
-        ? routeData.constraint
-        : null;
-    this.handlersByMethodMapping =
-      routeData && routeData.method ? { [routeData.method]: routeData.handler } : {};
+    this.constraint = routeData
+      && routeData.constraint
+      && RouterNode.validateConstraint(routeData.constraint)
+      ? routeData.constraint
+      : null;
+    this.handlersByMethodMapping = routeData
+    && routeData.method ? { [routeData.method]: routeData.handler } : {};
   }
 
   static validateConstraint(constraint) {
-    const validConstraint =
-      constraintValidatorsMapping.isNull(constraint) ||
-      constraintValidatorsMapping.isRegExp(constraint) ||
-      constraintValidatorsMapping.isFunction(constraint);
+    const validConstraint = constraintValidatorsMapping.isNull(constraint)
+      || constraintValidatorsMapping.isRegExp(constraint)
+      || constraintValidatorsMapping.isFunction(constraint);
 
     if (!validConstraint) throw new Error(errorsMapping.unknownConstraintType());
     return validConstraint;
@@ -41,8 +41,9 @@ export default class RouterNode {
     }
 
     const { handler, method } = routeData;
-    if (routeData && !this.handlersByMethodMapping[method])
+    if (routeData && !this.handlersByMethodMapping[method]) {
       this.handlersByMethodMapping[method] = handler;
+    }
     return currentChildren.get(pathSegment);
   }
 

@@ -26,8 +26,9 @@ export default class RouterTrie {
   findRoute(path, method) {
     const segments = parsePath(path, this.divider);
 
-    if (segments.length === 0 && path !== this.divider)
+    if (segments.length === 0 && path !== this.divider) {
       throw new Error(errorsMapping.unknownPathError(path));
+    }
 
     const result = this.root.findChild(segments, method);
 

@@ -96,8 +96,6 @@ describe('router', () => {
     expect(() => router.serve({ path: '/courses/22', method: 'PUT' })).toThrow('No such path - ');
     expect(() => router.serve({ path: '' })).toThrow('No such path - ');
 
-    expect(() =>
-      buildRouter([{ path: '/courses/:id', handler: () => 'course!', constraints: { id: {} } }]),
-    ).toThrow('Unknown constraint type');
+    expect(() => buildRouter([{ path: '/courses/:id', handler: () => 'course!', constraints: { id: {} } }])).toThrow('Unknown constraint type');
   });
 });
