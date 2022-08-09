@@ -1,10 +1,10 @@
 import RouterNode from './RouterNode.js';
-import { parsePath } from '../utils.js';
-import { defaultMethod } from '../constants.js';
+import { parsePath, getConstraintBySegment } from '../utils.js';
+import { defaultMethod, errorsMapping } from '../constants.js';
 
 export default class RouterTrie {
   constructor(routes, divider = '/') {
-    this.root = new RouterNode('Router');
+    this.root = new RouterNode();
     this.divider = divider;
 
     routes.forEach((route) => {
@@ -14,16 +14,21 @@ export default class RouterTrie {
   }
 
   addRoute(route) {
-    const { path } = route;
+    const { path, constraints = {} } = route;
     const segments = parsePath(path, this.divider);
 
     segments.reduce((currentNode, segment) => {
-      return currentNode.addChild(segment, route);
+      const constraint = getConstraintBySegment(constraints, segment);
+      return currentNode.addChild(segment, { ...route, constraint });
     }, this.root);
   }
 
   findRoute(path, method) {
     const segments = parsePath(path, this.divider);
+
+    if (segments.length === 0 && path !== this.divider)
+      throw new Error(errorsMapping.unknownPathError(path));
+
     const result = this.root.findChild(segments, method);
 
     return result ? { ...result, path: result.path.join(this.divider) } : null;

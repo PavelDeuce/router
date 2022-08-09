@@ -1,12 +1,32 @@
-import { getDynamicSegment, isDynamicSegment } from '../utils.js';
+import { errorsMapping } from '../constants.js';
+import { getDynamicSegment, isDynamicSegment, constraintValidatorsMapping } from '../utils.js';
 
 export default class RouterNode {
-  constructor(path, routeData = null) {
-    this.pathSegment = path;
+  constructor(routeData = null) {
     this.staticChildren = new Map();
     this.dynamicChildren = new Map();
+    this.constraint =
+      routeData && routeData.constraint && RouterNode.validateConstraint(routeData.constraint)
+        ? routeData.constraint
+        : null;
     this.handlersByMethodMapping =
       routeData && routeData.method ? { [routeData.method]: routeData.handler } : {};
+  }
+
+  static validateConstraint(constraint) {
+    const validConstraint =
+      constraintValidatorsMapping.isNull(constraint) ||
+      constraintValidatorsMapping.isRegExp(constraint) ||
+      constraintValidatorsMapping.isFunction(constraint);
+
+    if (!validConstraint) throw new Error(errorsMapping.unknownConstraintType());
+    return validConstraint;
+  }
+
+  validateParam(paramName) {
+    if (constraintValidatorsMapping.isNull(this.constraint)) return true;
+    if (constraintValidatorsMapping.isFunction(this.constraint)) return this.constraint(paramName);
+    return paramName.match(this.constraint);
   }
 
   addChild(pathSegment, routeData) {
@@ -15,7 +35,7 @@ export default class RouterNode {
       : this.staticChildren;
 
     if (!currentChildren.has(pathSegment)) {
-      const node = new RouterNode(pathSegment, routeData);
+      const node = new RouterNode(routeData);
       currentChildren.set(pathSegment, node);
       return node;
     }
@@ -32,7 +52,7 @@ export default class RouterNode {
 
     const child = this.staticChildren.get(segment);
     const data = child.findChild(rest, method);
-    return { ...data, path: [segment, ...data.path] };
+    return data ? { ...data, path: [segment, ...data.path] } : null;
   }
 
   findDynamicChild(segments, method) {
@@ -40,7 +60,7 @@ export default class RouterNode {
     // eslint-disable-next-line no-restricted-syntax
     for (const [dynamicSegment, child] of this.dynamicChildren.entries()) {
       const data = child.findChild(rest, method);
-      if (data !== null) {
+      if (data !== null && child.validateParam(segment)) {
         const name = getDynamicSegment(dynamicSegment);
         return {
           ...data,

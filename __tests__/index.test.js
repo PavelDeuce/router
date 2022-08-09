@@ -20,7 +20,6 @@ describe('router', () => {
     const route = router.serve(request);
 
     expect(route.handler()).toBe('courses!');
-    expect(() => router.serve({ path: '/no_such_way' })).toThrow('Unknown path - /no_such_way');
   });
 
   test('dynamic routes', () => {
@@ -34,6 +33,7 @@ describe('router', () => {
         path: '/courses/:course_id/exercises/:id',
         handler: () => 'exercise!',
         method: 'GET',
+        constraints: { id: /\d+/, course_id: (courseId) => courseId.startsWith('php') },
       },
 
       {
@@ -51,16 +51,38 @@ describe('router', () => {
     expect(route.handler(route.params)).toEqual('course!');
     expect(route.params).toEqual({ id: 'php_trees' });
 
-    const request2 = { path: '/courses/test/exercises/4', method: 'GET' };
+    const request2 = { path: '/courses/php_test/exercises/4', method: 'GET' };
     const route2 = router.serve(request2);
 
     expect(route2.handler(route2.params)).toEqual('exercise!');
-    expect(route2.params).toEqual({ course_id: 'test', id: '4' });
+    expect(route2.params).toEqual({ course_id: 'php_test', id: '4' });
 
-    const request3 = { path: '/courses/test/exercises/4/tests/26', method: 'POST' };
+    const request3 = { path: '/courses/php_test/exercises/4/tests/26', method: 'POST' };
     const route3 = router.serve(request3);
 
     expect(route3.handler(route3.params)).toEqual('tests!');
-    expect(route3.params).toEqual({ course_id: 'test', exercise_id: '4', id: '26' });
+    expect(route3.params).toEqual({ course_id: 'php_test', exercise_id: '4', id: '26' });
+  });
+
+  test('errors', () => {
+    const routes = [
+      {
+        path: '/courses/:id',
+        handler: () => 'course!',
+        method: 'GET',
+        constraints: { id: /\d+/ },
+      },
+    ];
+
+    const router = buildRouter(routes);
+    expect(() => router.serve({ path: '/no_such_way' })).toThrow('Unknown path - /no_such_way');
+    expect(() => router.serve({ path: '/courses/invalid' })).toThrow(
+      'Unknown path - /courses/invalid',
+    );
+    expect(() => router.serve({ path: '' })).toThrow('Unknown path - ');
+
+    expect(() =>
+      buildRouter([{ path: '/courses/:id', handler: () => 'course!', constraints: { id: {} } }]),
+    ).toThrow('Unknown constraint type');
   });
 });
