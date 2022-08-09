@@ -76,6 +76,7 @@ export default class RouterNode {
   findChild(segments, method) {
     if (segments.length === 0) {
       const handler = this.handlersByMethodMapping[method];
+      if (!handler) throw new Error(errorsMapping.unknownPathError());
       return { path: [], params: {}, handler };
     }
 

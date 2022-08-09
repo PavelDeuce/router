@@ -89,11 +89,12 @@ describe('router', () => {
     ];
 
     const router = buildRouter(routes);
-    expect(() => router.serve({ path: '/no_such_way' })).toThrow('Unknown path - /no_such_way');
+    expect(() => router.serve({ path: '/no_such_way' })).toThrow('No such path - /no_such_way');
     expect(() => router.serve({ path: '/courses/invalid' })).toThrow(
-      'Unknown path - /courses/invalid',
+      'No such path - /courses/invalid',
     );
-    expect(() => router.serve({ path: '' })).toThrow('Unknown path - ');
+    expect(() => router.serve({ path: '/courses/22', method: 'PUT' })).toThrow('No such path - ');
+    expect(() => router.serve({ path: '' })).toThrow('No such path - ');
 
     expect(() =>
       buildRouter([{ path: '/courses/:id', handler: () => 'course!', constraints: { id: {} } }]),
