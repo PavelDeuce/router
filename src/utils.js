@@ -1,16 +1,23 @@
-export const parseRoutes = (routes) =>
-  routes.map((route) => ({
-    ...route,
-    replacedPath: new RegExp(`^${route.path.replace(/:\w+/gi, '\\w+')}$`),
-  }));
+export const parsePath = (path, divider) => (path === divider
+  ? [path]
+  : path
+    .trim()
+    .split(divider)
+    .filter((s) => s !== ''));
 
-export const parseParams = (routePath, path) => {
-  const parts = path.split('/');
-  const colon = ':';
+export const isDynamicSegment = (segment) => segment.startsWith(':');
 
-  return routePath.split('/').reduce((params, part, index) => {
-    if (!part.startsWith(colon)) return params;
+export const getDynamicSegment = (segment) => segment.slice(1);
 
-    return { ...params, [part.slice(part.indexOf(colon) + 1)]: parts[index] };
-  });
+export const constraintValidatorsMapping = {
+  isNull: (constraint) => constraint === null,
+  isFunction: (constraint) => typeof constraint === 'function',
+  isRegExp: (constraint) => constraint instanceof RegExp,
+};
+
+export const getConstraintBySegment = (constraintsMapping, segment) => {
+  if (!isDynamicSegment(segment)) return null;
+
+  const dynamicSegment = getDynamicSegment(segment);
+  return constraintsMapping[dynamicSegment] ?? null;
 };
