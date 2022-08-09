@@ -1,6 +1,20 @@
 import buildRouter from '../src/index.js';
 
 describe('router', () => {
+  test('root searching', () => {
+    const routes = [
+      {
+        method: 'GET',
+        path: '/',
+        handler: () => 'root!',
+      },
+    ];
+
+    const router = buildRouter(routes);
+    const route = router.serve({ path: '/' });
+    expect(route.handler()).toBe('root!');
+  });
+
   test('static routes', () => {
     const routes = [
       {

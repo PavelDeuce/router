@@ -1,8 +1,10 @@
 export const parsePath = (path, divider) =>
-  path
-    .trim()
-    .split(divider)
-    .filter((s) => s !== '');
+  path === divider
+    ? [path]
+    : path
+        .trim()
+        .split(divider)
+        .filter((s) => s !== '');
 
 export const isDynamicSegment = (segment) => segment.startsWith(':');
 
