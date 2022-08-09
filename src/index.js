@@ -7,7 +7,7 @@ export default (routes) => {
   const serve = ({ path, method = defaultMethod }) => {
     const route = router.findRoute(path, method);
 
-    if (!route) throw new Error(errorsMapping.unknownPathError(path));
+    if (!route || !route.handler) throw new Error(errorsMapping.unknownPathError(path));
 
     return route;
   };
