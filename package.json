@@ -17,14 +17,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PavelDeuce/js-algorithms-trees-project-lvl1.git"
+    "url": "git+https://github.com/PavelDeuce/router.git"
   },
   "author": "Pavel Deryugin (PavelDeuce)",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/PavelDeuce/js-algorithms-trees-project-lvl1/issues"
+    "url": "https://github.com/PavelDeuce/router/issues"
   },
-  "homepage": "https://github.com/PavelDeuce/js-algorithms-trees-project-lvl1#readme",
+  "homepage": "https://github.com/PavelDeuce/router#readme",
   "devDependencies": {
     "@jest/globals": "^28.1.2",
     "@types/jest": "^28.1.6",
