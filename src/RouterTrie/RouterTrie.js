@@ -1,7 +1,10 @@
+// @ts-check
+
 import RouterNode from './RouterNode.js';
 import { parsePath, getConstraintBySegment } from '../utils.js';
 import { defaultMethod, errorsMapping } from '../constants.js';
 
+/** Class representing Router Trie */
 export default class RouterTrie {
   constructor(routes, divider = '/') {
     this.root = new RouterNode();

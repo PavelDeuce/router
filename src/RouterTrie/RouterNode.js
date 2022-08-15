@@ -1,6 +1,9 @@
-import { errorsMapping } from '../constants.js';
-import { getDynamicSegment, isDynamicSegment, constraintValidatorsMapping } from '../utils.js';
+// @ts-nocheck
 
+import { errorsMapping, constraintValidatorsMapping } from '../constants.js';
+import { getDynamicSegment, isDynamicSegment } from '../utils.js';
+
+/** Class representing Router Node */
 export default class RouterNode {
   constructor(routeData = null) {
     this.staticChildren = new Map();
