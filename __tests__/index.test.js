@@ -1,35 +1,54 @@
 import buildRouter from '../src/index.js';
 
-describe('router', () => {
-  test('root searching', () => {
-    const routes = [
-      {
-        method: 'GET',
-        path: '/',
-        handler: () => 'root!',
-      },
-    ];
+const routes = [
+  {
+    method: 'GET',
+    path: '/',
+    handler: () => 'root!',
+  },
+  {
+    path: '/courses',
+    handler: () => 'courses!',
+    method: 'GET',
+  },
+  {
+    path: '/courses/basics',
+    handler: () => 'basics',
+    method: 'GET',
+  },
+  {
+    path: '/courses/:id',
+    handler: () => 'course!',
+    method: 'GET',
+    constraints: { id: (id) => id.startsWith('php') },
+  },
+  {
+    path: '/courses/:course_id/exercises/:id',
+    handler: () => 'exercise!',
+    method: 'GET',
+    constraints: { id: /\d+/, course_id: (courseId) => courseId.startsWith('php') },
+  },
 
-    const router = buildRouter(routes);
+  {
+    path: '/courses/:course_id/exercises/:exercise_id/tests/:id',
+    handler: () => 'tests!',
+    method: 'POST',
+  },
+];
+
+describe('router', () => {
+  let router;
+
+  beforeAll(() => {
+    router = buildRouter(routes);
+  });
+
+  test('root searching', () => {
     const route = router.serve({ path: '/' });
     expect(route.handler()).toBe('root!');
   });
 
   test('static routes', () => {
-    const routes = [
-      {
-        path: '/courses',
-        handler: () => 'courses!',
-        method: 'GET',
-      },
-      {
-        path: '/courses/basics',
-        handler: () => 'basics',
-        method: 'GET',
-      },
-    ];
-
-    const router = buildRouter(routes);
     const request = { path: '/courses', method: 'GET' };
     const route = router.serve(request);
 
@@ -37,28 +56,6 @@ describe('router', () => {
   });
 
   test('dynamic routes', () => {
-    const routes = [
-      {
-        path: '/courses/:id',
-        handler: () => 'course!',
-        method: 'GET',
-      },
-      {
-        path: '/courses/:course_id/exercises/:id',
-        handler: () => 'exercise!',
-        method: 'GET',
-        constraints: { id: /\d+/, course_id: (courseId) => courseId.startsWith('php') },
-      },
-
-      {
-        path: '/courses/:course_id/exercises/:exercise_id/tests/:id',
-        handler: () => 'tests!',
-        method: 'POST',
-      },
-    ];
-
-    const router = buildRouter(routes);
-
     const request = { path: '/courses/php_trees', method: 'GET' };
     const route = router.serve(request);
 
@@ -79,16 +76,6 @@ describe('router', () => {
   });
 
   test('errors', () => {
-    const routes = [
-      {
-        path: '/courses/:id',
-        handler: () => 'course!',
-        method: 'GET',
-        constraints: { id: /\d+/ },
-      },
-    ];
-
-    const router = buildRouter(routes);
     expect(() => router.serve({ path: '/no_such_way' })).toThrow('No such path - /no_such_way');
     expect(() => router.serve({ path: '/courses/invalid' })).toThrow(
       'No such path - /courses/invalid',
