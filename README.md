@@ -11,7 +11,7 @@ Lightweight library to provide an API for handling routes
 
 ## Example
 
-```
+```javascript
 import buildRouter from '@hexlet/code';
 
 const routes = [
@@ -22,7 +22,7 @@ const routes = [
   },
 ];
 
-const router = makeRouter(routes);
+const router = buildRouter(routes);
 const result = router.serve({ path: '/courses/1/exercises/js' });
 // { handler: [Function handler] , path: '/courses/1/exercises/js', params: { id: '1', course_id: 'js' }, method: 'GET' }
 result.handler(result.params); // exercise!
