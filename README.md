@@ -1,5 +1,6 @@
 # router
 
+[![Node CI](https://github.com/PavelDeuce/router/actions/workflows/nodejs.yml/badge.svg)](https://github.com/PavelDeuce/router/actions/workflows/nodejs.yml)
 [![Actions Status](https://github.com/PavelDeuce/js-algorithms-trees-project-lvl1/workflows/hexlet-check/badge.svg)](https://github.com/PavelDeuce/js-algorithms-trees-project-lvl1/actions)
 [![Maintainability](https://api.codeclimate.com/v1/badges/cf29babbd64a5ec941bc/maintainability)](https://codeclimate.com/github/PavelDeuce/router/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/cf29babbd64a5ec941bc/test_coverage)](https://codeclimate.com/github/PavelDeuce/router/test_coverage)
